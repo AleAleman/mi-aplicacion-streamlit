@@ -9,7 +9,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(r'C:\Users\aleja\OneDri
 client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo de Google por nombre
-sheet = client.open("NombreDeTuHoja").sheet1
+sheet = client.open("App_streamlit").sheet1
 
 # Crear una instancia de DataFrame si no existe en el estado de la sesión
 if 'df' not in st.session_state:
