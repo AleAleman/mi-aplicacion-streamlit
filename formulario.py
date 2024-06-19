@@ -2,14 +2,14 @@ import streamlit as st
 import pandas as pd
 from openpyxl import Workbook
 
-# Crear una instancia de DataFrame
+# Crear una instancia de DataFrame si no existe en el estado de la sesión
 if 'df' not in st.session_state:
     st.session_state.df = pd.DataFrame(columns=['Nombre Completo', 'Identidad', 'Ciudad'])
 
 # Función para agregar datos
 def agregar_datos():
-    nuevo_dato = {'Nombre Completo': nombre, 'Identidad': identidad, 'Ciudad': ciudad}
-    st.session_state.df = st.session_state.df.append(nuevo_dato, ignore_index=True)
+    nuevo_dato = pd.DataFrame([{'Nombre Completo': nombre, 'Identidad': identidad, 'Ciudad': ciudad}])
+    st.session_state.df = pd.concat([st.session_state.df, nuevo_dato], ignore_index=True)
     st.success("Datos agregados con éxito!")
 
 # Función para guardar a Excel
