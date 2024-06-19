@@ -1,32 +1,38 @@
 import streamlit as st
 import pandas as pd
-from openpyxl import Workbook
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+# Configuración de la autenticación de Google
+scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_name('C:\Users\aleja\OneDrive\Documentos\client_secret_317714585896-9oob5m22gpq4k4sfn8pdvel6ht1ebpua.apps.googleusercontent.com.json', scope)
+client = gspread.authorize(creds)
+
+# Abrir la hoja de cálculo de Google por nombre
+sheet = client.open("NombreDeTuHoja").sheet1
 
 # Crear una instancia de DataFrame si no existe en el estado de la sesión
 if 'df' not in st.session_state:
-    st.session_state.df = pd.DataFrame(columns=['Nombre Completo', 'Identidad', 'Ciudad'])
+    # Cargar datos existentes desde Google Sheets
+    data = sheet.get_all_records()
+    st.session_state.df = pd.DataFrame(data)
 
 # Función para agregar datos
 def agregar_datos():
-    nuevo_dato = pd.DataFrame([{'Nombre Completo': nombre, 'Identidad': identidad, 'Ciudad': ciudad}])
-    st.session_state.df = pd.concat([st.session_state.df, nuevo_dato], ignore_index=True)
+    nuevo_dato = {'Nombre Completo': nombre, 'Identidad': identidad, 'Ciudad': ciudad}
+    sheet.append_row(list(nuevo_dato.values()))
+    st.session_state.df = st.session_state.df.append(nuevo_dato, ignore_index=True)
     st.success("Datos agregados con éxito!")
-
-# Función para guardar a Excel
-def guardar_excel():
-    with pd.ExcelWriter('DatosFormulario.xlsx') as writer:
-        st.session_state.df.to_excel(writer, index=False)
-    st.success("Datos guardados en Excel.")
 
 # Crear los campos del formulario
 nombre = st.text_input("Nombre Completo")
 identidad = st.text_input("Identidad")
 ciudad = st.text_input("Ciudad")
 
-# Botones para interacción
+# Botón para agregar datos
 st.button("Agregar Datos", on_click=agregar_datos)
-st.button("Guardar en Excel", on_click=guardar_excel)
 
 # Mostrar DataFrame
 st.write("Datos Actuales en el DataFrame:")
-st.dataframe(st.session_state.df)
+st.dataframe(st.session_json.df)
+
