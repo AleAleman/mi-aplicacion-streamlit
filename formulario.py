@@ -5,7 +5,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # Configuración de la autenticación de Google
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name('C:\Users\aleja\OneDrive\Documentos\client_secret_317714585896-9oob5m22gpq4k4sfn8pdvel6ht1ebpua.apps.googleusercontent.com.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(r'C:\Users\aleja\OneDrive\Documentos\client_secret_317714585896-9oob5m22gpqg4k4sfn8pdve16htlebpua.apps.googleusercontent.com.json', scope)
 client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo de Google por nombre
