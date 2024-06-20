@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # Configuración inicial de la página
 st.set_page_config(
-    layout="wide",  # Usa el layout "wide" que es más limpio
+   # layout="wide",  # Usa el layout "wide" que es más limpio
     initial_sidebar_state="collapsed",  # Colapsa la barra lateral por defecto
     menu_items={
         'Get Help': None,  # Desactiva el enlace de "Get Help"
