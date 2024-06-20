@@ -5,23 +5,15 @@ import os
 import json
 from oauth2client.service_account import ServiceAccountCredentials
 
-import os
-import json
-from oauth2client.client import OAuth2WebServerFlow
-
 # Carga la cadena JSON desde una variable de entorno
 json_creds = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
 if json_creds is None:
-    raise ValueError("La variable de entorno 'GOOGLE_APPLICATION_CREDENTIALS_JSON' no está configurada.")
+    st.error("La variable de entorno 'GOOGLE_APPLICATION_CREDENTIALS_JSON' no está configurada.")
+    st.stop()
 
 creds_dict = json.loads(json_creds)
-flow = OAuth2WebServerFlow(
-    client_id=creds_dict['web']['client_id'],
-    client_secret=creds_dict['web']['client_secret'],
-    scope=['https://www.googleapis.com/auth/drive'],
-    redirect_uri=creds_dict['web']['redirect_uris'][0]
-)
-
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://www.googleapis.com/auth/drive'])
+client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo de Google por nombre
 sheet = client.open("App_streamlit").sheet1
@@ -50,4 +42,3 @@ st.button("Agregar Datos", on_click=agregar_datos)
 # Mostrar DataFrame
 st.write("Datos Actuales en el DataFrame:")
 st.dataframe(st.session_state.df)
-
