@@ -19,6 +19,7 @@ else:
         st.error("Error al decodificar el JSON de las credenciales. Verifique el formato del JSON.")
         st.stop()
 
+client = gspread.authorize(creds)
 # Abrir la hoja de cálculo de Google por nombre
 sheet = client.open("App_streamlit").sheet1
 
