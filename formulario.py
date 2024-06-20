@@ -1,12 +1,15 @@
 import streamlit as st
 import pandas as pd
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import os
+import json
+from oauth2client.service_account import ServiceAccountCredentials
 
-# Carga la ruta del archivo de la variable de entorno
-path_to_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
-creds = ServiceAccountCredentials.from_json_keyfile_name(path_to_json, ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'])
+# Carga la cadena JSON desde una variable de entorno
+json_creds = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
+creds_dict = json.loads(json_creds)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'])
+
 client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo de Google por nombre
