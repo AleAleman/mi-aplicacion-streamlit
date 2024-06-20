@@ -3,6 +3,7 @@ import pandas as pd
 import gspread
 import os
 import json
+import streamlit as st
 from oauth2client.service_account import ServiceAccountCredentials
 
 # Carga la cadena JSON desde una variable de entorno
