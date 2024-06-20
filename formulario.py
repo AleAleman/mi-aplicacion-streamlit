@@ -12,14 +12,19 @@ if json_creds is None:
     st.stop()
 
 creds_dict = json.loads(json_creds)
-scopes = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://www.googleapis.com/auth/spreadsheets'])
 
 try:
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scopes)
     client = gspread.authorize(creds)
-    sheet = client.open("App_streamlit").worksheet("Hoja 1")
+    # Asegúrate de que el nombre de la hoja de cálculo sea correcto
+    spreadsheet = client.open("App_streamlit")
+    # Si tu hoja se llama "Hoja 1", accede a ella de esta manera
+    sheet = spreadsheet.worksheet("Hoja 1")
 except gspread.exceptions.SpreadsheetNotFound:
     st.error("La hoja de cálculo 'App_streamlit' no fue encontrada. Verifica el nombre y los permisos de acceso.")
+    st.stop()
+except gspread.exceptions.WorksheetNotFound:
+    st.error("La hoja 'Hoja 1' no fue encontrada en la hoja de cálculo 'App_streamlit'. Verifica el nombre de la hoja.")
     st.stop()
 except gspread.exceptions.APIError as e:
     st.error(f"Error de API al intentar acceder a la hoja de cálculo: {e}")
