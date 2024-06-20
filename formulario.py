@@ -7,10 +7,17 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # Carga la cadena JSON desde una variable de entorno
 json_creds = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
-creds_dict = json.loads(json_creds)
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'])
-
-client = gspread.authorize(creds)
+if json_creds is None:
+    st.error("La variable de entorno 'GOOGLE_APPLICATION_CREDENTIALS_JSON' no está configurada.")
+    st.stop()
+else:
+    try:
+        creds_dict = json.loads(json_creds)
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'])
+        client = gspread.authorize(creds)
+    except json.JSONDecodeError:
+        st.error("Error al decodificar el JSON de las credenciales. Verifique el formato del JSON.")
+        st.stop()
 
 # Abrir la hoja de cálculo de Google por nombre
 sheet = client.open("App_streamlit").sheet1
