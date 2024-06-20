@@ -1,7 +1,5 @@
-streamlit
-pandas
-openpyxl
-gspread
-oauth2client
-json
-os
+streamlit==1.0.0
+pandas==1.2.3
+openpyxl==3.0.7
+gspread==3.6.0
+oauth2client==4.1.3
