@@ -2,10 +2,11 @@ import streamlit as st
 import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import os
 
-# Configuración de la autenticación de Google
-scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name(r'C:\Users\aleja\OneDrive\Documentos\client_secret_317714585896-9oob5m22gpqg4k4sfn8pdve16htlebpua.apps.googleusercontent.com.json', scope)
+# Carga la ruta del archivo de la variable de entorno
+path_to_json = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+creds = ServiceAccountCredentials.from_json_keyfile_name(path_to_json, ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'])
 client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo de Google por nombre
@@ -34,5 +35,5 @@ st.button("Agregar Datos", on_click=agregar_datos)
 
 # Mostrar DataFrame
 st.write("Datos Actuales en el DataFrame:")
-st.dataframe(st.session_json.df)
+st.dataframe(st.session_state.df)
 
