@@ -44,3 +44,4 @@ st.button("Agregar Datos", on_click=agregar_datos)
 st.write("Datos Actuales en el DataFrame:")
 st.dataframe(st.session_state.df)
 
+
