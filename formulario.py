@@ -14,23 +14,40 @@ if json_creds is None:
 creds_dict = json.loads(json_creds)
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://www.googleapis.com/auth/spreadsheets'])
 
-client = gspread.authorize(creds)
-
-# Abrir la hoja de cálculo de Google por nombre
-sheet = client.open("App_streamlit").sheet1
+try:
+    client = gspread.authorize(creds)
+    spreadsheet = client.open("App_streamlit")
+    sheet = spreadsheet.worksheet("Hoja 1")  # Cambiado para acceder a "Hoja 1"
+except gspread.exceptions.SpreadsheetNotFound:
+    st.error("La hoja de cálculo 'App_streamlit' no fue encontrada. Verifica el nombre y los permisos de acceso.")
+    st.stop()
+except gspread.exceptions.WorksheetNotFound:
+    st.error("La hoja 'Hoja 1' no fue encontrada en la hoja de cálculo 'App_streamlit'.")
+    st.stop()
+except gspread.exceptions.APIError as e:
+    st.error(f"Error de API al intentar acceder a la hoja de cálculo: {e}")
+    st.stop()
+except Exception as e:
+    st.error(f"Ocurrió un error inesperado: {e}")
+    st.stop()
 
 # Crear una instancia de DataFrame si no existe en el estado de la sesión
 if 'df' not in st.session_state:
-    # Cargar datos existentes desde Google Sheets
-    data = sheet.get_all_records()
-    st.session_state.df = pd.DataFrame(data)
+    try:
+        data = sheet.get_all_records()
+        st.session_state.df = pd.DataFrame(data)
+    except Exception as e:
+        st.error(f"Error al cargar los datos desde Google Sheets: {e}")
 
 # Función para agregar datos
 def agregar_datos():
-    nuevo_dato = {'Nombre Completo': nombre, 'Identidad': identidad, 'Ciudad': ciudad}
-    sheet.append_row(list(nuevo_dato.values()))
-    st.session_state.df = st.session_state.df.append(nuevo_dato, ignore_index=True)
-    st.success("Datos agregados con éxito!")
+    try:
+        nuevo_dato = {'Nombre Completo': nombre, 'Identidad': identidad, 'Ciudad': ciudad}
+        sheet.append_row(list(nuevo_dato.values()))
+        st.session_state.df = st.session_state.df.append(nuevo_dato, ignore_index=True)
+        st.success("Datos agregados con éxito!")
+    except Exception as e:
+        st.error(f"Error al agregar datos a Google Sheets: {e}")
 
 # Crear los campos del formulario
 nombre = st.text_input("Nombre Completo")
@@ -43,5 +60,4 @@ st.button("Agregar Datos", on_click=agregar_datos)
 # Mostrar DataFrame
 st.write("Datos Actuales en el DataFrame:")
 st.dataframe(st.session_state.df)
-
 
