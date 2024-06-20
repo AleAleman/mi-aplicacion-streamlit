@@ -12,7 +12,8 @@ if json_creds is None:
     st.stop()
 
 creds_dict = json.loads(json_creds)
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://www.googleapis.com/auth/drive'])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://www.googleapis.com/auth/spreadsheets'])
+
 client = gspread.authorize(creds)
 
 # Abrir la hoja de cálculo de Google por nombre
