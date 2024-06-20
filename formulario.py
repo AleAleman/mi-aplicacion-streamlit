@@ -16,15 +16,9 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, ['https://w
 
 try:
     client = gspread.authorize(creds)
-    # Asegúrate de que el nombre de la hoja de cálculo sea correcto
-    spreadsheet = client.open("App_streamlit")
-    # Si tu hoja se llama "Hoja 1", accede a ella de esta manera
-    sheet = spreadsheet.worksheet("Hoja 1")
+    sheet = client.open("App_streamlit").sheet1
 except gspread.exceptions.SpreadsheetNotFound:
     st.error("La hoja de cálculo 'App_streamlit' no fue encontrada. Verifica el nombre y los permisos de acceso.")
-    st.stop()
-except gspread.exceptions.WorksheetNotFound:
-    st.error("La hoja 'Hoja 1' no fue encontrada en la hoja de cálculo 'App_streamlit'. Verifica el nombre de la hoja.")
     st.stop()
 except gspread.exceptions.APIError as e:
     st.error(f"Error de API al intentar acceder a la hoja de cálculo: {e}")
@@ -62,4 +56,3 @@ st.button("Agregar Datos", on_click=agregar_datos)
 # Mostrar DataFrame
 st.write("Datos Actuales en el DataFrame:")
 st.dataframe(st.session_state.df)
-
