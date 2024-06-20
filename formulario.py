@@ -41,7 +41,8 @@ def agregar_datos():
     try:
         nuevo_dato = {'Nombre Completo': nombre, 'Identidad': identidad, 'Ciudad': ciudad}
         sheet.append_row(list(nuevo_dato.values()))
-        st.session_state.df = st.session_state.df.append(nuevo_dato, ignore_index=True)
+        # Usar pd.concat en lugar de append para actualizar el DataFrame
+        st.session_state.df = pd.concat([st.session_state.df, pd.DataFrame([nuevo_dato])], ignore_index=True)
         st.success("Datos agregados con éxito!")
     except Exception as e:
         st.error(f"Error al agregar datos a Google Sheets: {e}")
@@ -57,3 +58,4 @@ st.button("Agregar Datos", on_click=agregar_datos)
 # Mostrar DataFrame
 st.write("Datos Actuales en el DataFrame:")
 st.dataframe(st.session_state.df)
+
