@@ -59,3 +59,14 @@ st.button("Agregar Datos", on_click=agregar_datos)
 # st.write("Datos Actuales en el DataFrame:")
 # st.dataframe(st.session_state.df)
 
+# Esconde el menú superior y toda la barra lateral (opcionalmente)
+st.set_page_config(
+    layout="wide",  # Usa el layout "wide" que es más limpio
+    initial_sidebar_state="collapsed",  # Colapsa la barra lateral por defecto
+    menu_items={
+        'Get Help': None,  # Desactiva el enlace de "Get Help"
+        'Report a bug': None,  # Desactiva el enlace de "Report a bug"
+        'About': None  # Desactiva la sección "About"
+    }
+)
+
