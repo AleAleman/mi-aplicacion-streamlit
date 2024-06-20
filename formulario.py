@@ -3,8 +3,18 @@ import pandas as pd
 import gspread
 import os
 import json
-import streamlit as st
 from oauth2client.service_account import ServiceAccountCredentials
+
+# Configuración inicial de la página
+st.set_page_config(
+    layout="wide",  # Usa el layout "wide" que es más limpio
+    initial_sidebar_state="collapsed",  # Colapsa la barra lateral por defecto
+    menu_items={
+        'Get Help': None,  # Desactiva el enlace de "Get Help"
+        'Report a bug': None,  # Desactiva el enlace de "Report a bug"
+        'About': None  # Desactiva la sección "About"
+    }
+)
 
 # Carga la cadena JSON desde una variable de entorno
 json_creds = os.getenv('GOOGLE_APPLICATION_CREDENTIALS_JSON')
@@ -59,15 +69,3 @@ st.button("Agregar Datos", on_click=agregar_datos)
 # Mostrar DataFrame
 # st.write("Datos Actuales en el DataFrame:")
 # st.dataframe(st.session_state.df)
-
-# Esconde el menú superior y toda la barra lateral (opcionalmente)
-st.set_page_config(
-    layout="wide",  # Usa el layout "wide" que es más limpio
-    initial_sidebar_state="collapsed",  # Colapsa la barra lateral por defecto
-    menu_items={
-        'Get Help': None,  # Desactiva el enlace de "Get Help"
-        'Report a bug': None,  # Desactiva el enlace de "Report a bug"
-        'About': None  # Desactiva la sección "About"
-    }
-)
-
